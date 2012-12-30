@@ -229,14 +229,9 @@ public void onResume() {
 /*------------------------ getScreen-----------------------------------*/
 private void getScreen(){
 	
-	boolean mExternalStorageAvailable = false;
-	boolean mExternalStorageWriteable = false;
 	String state = Environment.getExternalStorageState();
 
 	if (Environment.MEDIA_MOUNTED.equals(state)) {
-	    // We can read and write the media
-	    mExternalStorageAvailable = mExternalStorageWriteable = true;
-	   
 	    /* como podemos leer la tarjeta grabamos*/
 	    String folder_path = getResources().getString(R.string.folder_path);
 		String name_path = getResources().getString(R.string.name_path);
@@ -259,15 +254,9 @@ private void getScreen(){
 	    // We can only read the media
 		Toast.makeText(getApplicationContext(), 
 				getResources().getString(R.string.msg_saveImageFail), Toast.LENGTH_LONG).show();
-	    mExternalStorageAvailable = true;
-	    mExternalStorageWriteable = false;
 	} else {
 		Toast.makeText(getApplicationContext(), 
 				getResources().getString(R.string.msg_saveImageFail), Toast.LENGTH_LONG).show();
-		 /* no podemos escribir*/
-	    // Something else is wrong. It may be one of many other states, but all we need
-	    //  to know is we can neither read nor write
-	    mExternalStorageAvailable = mExternalStorageWriteable = false;
 	}
 	
 	
