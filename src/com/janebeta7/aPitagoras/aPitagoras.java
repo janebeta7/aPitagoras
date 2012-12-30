@@ -280,7 +280,7 @@ public boolean onOptionsItemSelected(MenuItem item) {
 	// Handle item selection
 	switch (item.getItemId()) {
 	case R.id.info:
-		Toast.makeText(this, "info", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "aPitagoras 1.0 by janebeta7", Toast.LENGTH_SHORT).show();
 		return true;
 	case R.id.fade:
 		 fade.setFade();
