@@ -1,28 +1,23 @@
 package com.janebeta7.aPitagoras;
 
 import java.io.File;
-import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import processing.core.PApplet;
-import com.janebeta7.aPitagoras.R;
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.widget.Toast;
 
 @SuppressLint("SimpleDateFormat")
-public class aPitagoras extends PApplet {
+public class aPitagoras extends PApplet  implements ColorPickerDialog.OnColorChangedListener{
 	private int mInitialColor = 0xFFFFFFFF;
 	protected static final int EDIT_PREFS = 1;
 	/*
@@ -54,7 +49,7 @@ public class aPitagoras extends PApplet {
 	int z = 0;
 	int contCirculos = 0;
 	boolean iniciamos = false;
-
+	boolean dibuja = true;
 	public void setup() {
 		smooth();
 		Ax = displayWidth;
@@ -64,8 +59,6 @@ public class aPitagoras extends PApplet {
 	}
 
 	public void inicia() {
-
-		//println("contCirculos" + contCirculos);
 		if (contCirculos == (NUM))
 			contCirculos = 0;
 		w[contCirculos] = new Circulo(PApplet.parseInt(random(radio)),
@@ -75,12 +68,14 @@ public class aPitagoras extends PApplet {
 	}
 
 	public void draw() {
-		fade.render();
-		for (int z = 0; z < contCirculos; z++) {
-			//println("z:" + z);
-			if (w[z].dibujado == false)
-				w[z].draw(255);
+		if (dibuja){
+			fade.render();
+			for (int z = 0; z < contCirculos; z++) {
+				if (w[z].dibujado == false)
+					w[z].draw(mInitialColor);
+			}
 		}
+		
 	}
 	
 	// clase que controla el fade in y el fade out
@@ -208,15 +203,17 @@ public class aPitagoras extends PApplet {
 	public void onResume() {
 		super.onResume();
 		println("RESUMED! (Sketch Entered...)");
-		// Create our Notification Manager:
-		gNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		// Create our Notification that will do the vibration:
-		gNotification = new Notification();
-		gNotification.defaults |= Notification.DEFAULT_SOUND;
-		gNotification.vibrate = gVibrate;
-
 	}
-
+	public void keyPressed() {
+		  if (key == CODED) {
+		 
+		    if (keyCode == MENU) {
+		      // user hit the menu key, take action
+		    	//dibuja = false;
+		      
+		    }
+		  }
+		}
 	/*-----------------------------------------------------------------------------*/
 	/*------------------------ ADD IN ECLIPSE--------------------------------------*/
 	/*-----------------------------------------------------------------------------*/
@@ -227,7 +224,6 @@ public class aPitagoras extends PApplet {
 
 	/*------------------------ getScreen-----------------------------------*/
 	private void getScreen() {
-
 		String state = Environment.getExternalStorageState();
 
 		if (Environment.MEDIA_MOUNTED.equals(state)) {
@@ -264,12 +260,19 @@ public class aPitagoras extends PApplet {
 					getResources().getString(R.string.msg_saveImageFail),
 					Toast.LENGTH_LONG).show();
 		}
+		dibuja = true;
 
 	}
 
 	/*------------------------ CREAMOS ACCIONES DE BOTON MENU-----------------------------------*/
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		/*otra manera de hacerlo sin usar el res ni xml > probar directamente en Processing
+		 * menu.add(0, SRCATOP_MENU_ID, 0, "SrcATop").setShortcut('5', 'z');
+		 * menu.add(0, COLOR_MENU_ID, 0, "Color").setShortcut('3', 'c');
+		 private static final int COLOR_MENU_ID = Menu.FIRST;
+		 */
+		
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.app_menu, menu);
 		return true;
@@ -288,21 +291,28 @@ public class aPitagoras extends PApplet {
 		 * Preferences.class); startActivityForResult(intent2, EDIT_PREFS);
 		 * return true;
 		 */
+		//COLOR_MENU_ID
 		case R.id.color:
 			//dibujar = false;
 			// new ColorPickerDialog(this, this, mInitialColor).show();
-			Toast.makeText(getApplicationContext(),"Not implemented yet! Sorry :(",Toast.LENGTH_LONG).show();
+			dibuja = false;
+			new ColorPickerDialog(this, this, mInitialColor).show();
+			//Toast.makeText(getApplicationContext(),"Not implemented yet! Sorry :(",Toast.LENGTH_LONG).show();
 			return true;
 		case R.id.fade:
+			
 			fade.setFade();
+			
 			return true;
 		case R.id.save:
+			
 			getScreen();
 			return true;
 
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+		
 	}
 
 	public int sketchWidth() {
@@ -325,4 +335,12 @@ public class aPitagoras extends PApplet {
 
 	}
 
+	@Override
+	public void colorChanged(int color) {
+		// TODO Auto-generated method stub
+		println("colorChanged:"+color);
+		mInitialColor = color;
+		dibuja = true;
+	}
+    
 }
