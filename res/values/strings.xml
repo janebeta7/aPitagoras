@@ -5,10 +5,12 @@
     <string name="main_screen">aPitagoras</string>
     <string name="splash_screen">aPitagoras</string>
     <string name="menu_save">save</string>
-    <string name="menu_info">info</string>
+    <string name="menu_color">color</string>
  	<string name="menu_fade">fade</string>
- 	<string name="folder_path">/DCIM/aPitagoras/</string>
- 	<string name="name_path">cPitagoras.png</string>
+ 	<string name="menu_settings">settings</string>
+ 	<string name="folder_path">/aPitagoras/</string>
+ 	<string name="name_path">cPitagoras</string>
+ 	<string name="ext_path">png</string>
  	<string name="msg_saveImageOk">Image saved at:</string>
  	<string name="msg_saveImageFail">External card is not ready!!</string>
 </resources>
