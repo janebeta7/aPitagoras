@@ -291,6 +291,7 @@ public class aPitagoras extends PApplet {
 		case R.id.color:
 			//dibujar = false;
 			// new ColorPickerDialog(this, this, mInitialColor).show();
+			Toast.makeText(getApplicationContext(),"Not implemented yet! Sorry :(",Toast.LENGTH_LONG).show();
 			return true;
 		case R.id.fade:
 			fade.setFade();
