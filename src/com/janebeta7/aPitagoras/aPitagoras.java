@@ -8,6 +8,8 @@ import processing.core.PApplet;
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceActivity;
@@ -240,6 +242,9 @@ public class aPitagoras extends PApplet  implements ColorPickerDialog.OnColorCha
 			String SD_PATH = extStore.getAbsolutePath() + folder_path
 					+ name_path + today + "." + ext_path;
 			save(SD_PATH);
+			// reescaneamos la sdcard para que aparezca en la galeria
+			sendStickyBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"+ Environment.getExternalStorageDirectory())));
+			
 			println("------salvamos imagen------" + SD_PATH);
 			Toast.makeText(
 					getApplicationContext(),
