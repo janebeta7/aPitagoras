@@ -6,7 +6,7 @@
     <uses-sdk android:minSdkVersion="8" />
 
     <application
-        android:debuggable="true"
+        android:debuggable="false"
         android:icon="@drawable/ic_launcher"
         android:label="aPitagoras" >
         <activity

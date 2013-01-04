@@ -15,9 +15,15 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 import android.widget.Toast;
 
 @SuppressLint("SimpleDateFormat")
@@ -56,7 +62,8 @@ public class aPitagoras extends PApplet implements
 	int contCirculos = 0;
 	boolean iniciamos = false;
 	boolean dibuja = true;
-
+	boolean isOpenColor = false;
+	
 	public void setup() {
 		smooth();
 		Ax = displayWidth;
@@ -75,7 +82,7 @@ public class aPitagoras extends PApplet implements
 	}
 
 	public void draw() {
-		if (dibuja) {
+		if (dibuja && !isOpenColor) {
 			fade.render();
 			for (int z = 0; z < contCirculos; z++) {
 				if (w[z].dibujado == false)
@@ -208,18 +215,19 @@ public class aPitagoras extends PApplet implements
 	// Processing is entered
 	// at the 'onResume()' state, and exits at the 'onPause()' state, so just
 	// override them as needed:
-
+	
 	public void onResume() {
 		super.onResume();
-		println("RESUMED! (Sketch Entered...)");
+		Log.i(LOGTAG, "onResume");
 	}
 
 	public void keyPressed() {
+		//Log.i(LOGTAG, "key PRESSED"+key);
 		if (key == CODED) {
-
+			Log.i(LOGTAG, "key PRESSED"+keyCode);
 			if (keyCode == MENU) {
-				// user hit the menu key, take action
-				// dibuja = false;
+				
+				//dibuja = false;
 
 			}
 		}
@@ -293,7 +301,7 @@ public class aPitagoras extends PApplet implements
 					getResources().getString(R.string.msg_saveImageFail),
 					Toast.LENGTH_LONG).show();
 		}
-		dibuja = true;
+		//dibuja = true;
 
 	}
 
@@ -307,16 +315,26 @@ public class aPitagoras extends PApplet implements
 		 * "Color").setShortcut('3', 'c'); private static final int
 		 * COLOR_MENU_ID = Menu.FIRST;
 		 */
-
+		println("Creamos menu");
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.app_menu, menu);
+		
 		return true;
 	}
 
 	/**
 	 * Opens the file manager to pick a directory.
 	 */
-
+	@Override
+	public void onOptionsMenuClosed(Menu menu) {
+		dibuja = true;
+	}
+	@Override
+	public boolean onMenuOpened(int featureId, Menu menu) {
+		dibuja = false;
+		
+	    return super.onMenuOpened(featureId, menu);
+	}
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
@@ -326,31 +344,35 @@ public class aPitagoras extends PApplet implements
 			startActivity(new Intent(this, aPreferences.class));
 			return true;*/
 		case R.id.color:
-			dibuja = false;
+			isOpenColor = true;
 			new ColorPickerDialog(this, this, mInitialColor).show();
 			return true;
 		case R.id.fade:
-			dibuja = false;
+			
 			fade.setFade();
-			dibuja = true;
+			//dibuja = true;
 			return true;
 		case R.id.save:
-			dibuja = false;
+			
 			try {
 				getScreen();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 			return true;
 
 		default:
-			dibuja = false;
+		
 			return super.onOptionsItemSelected(item);
 		}
 
 	}
 
+
+
+
+	
 	public int sketchWidth() {
 		return displayWidth;
 	}
@@ -364,13 +386,12 @@ public class aPitagoras extends PApplet implements
 		@Override
 		protected void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
-
-		
 			Log.e(LOGTAG, "Mensaje de error");
 			Log.w(LOGTAG, "Mensaje de warning");
 			Log.i(LOGTAG, "Mensaje de informaci—n");
 			Log.d(LOGTAG, "Mensaje de depuraci—n");
 			Log.v(LOGTAG, "Mensaje de verbose");
+			
 		}
 
 	}
@@ -380,7 +401,7 @@ public class aPitagoras extends PApplet implements
 		// TODO Auto-generated method stub
 		println("colorChanged:" + color);
 		mInitialColor = color;
-		dibuja = true;
+		isOpenColor = false;
 	}
 
 }
