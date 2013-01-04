@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">aPitagoras</string>
+    <string name="app_author">by janebeta7</string>
     <string name="main_screen">aPitagoras</string>
     <string name="splash_screen">aPitagoras</string>
     <string name="menu_save">save</string>
@@ -9,7 +10,7 @@
  	<string name="menu_fade">fade</string>
  	<string name="menu_settings">settings</string>
  	<string name="folder_path">/aPitagoras/</string>
- 	<string name="name_path">cPitagoras</string>
+ 	<string name="name_path">aPitagoras</string>
  	<string name="ext_path">png</string>
  	<string name="msg_saveImageOk">Image saved at:</string>
  	<string name="msg_saveImageFail">External card is not ready!!</string>

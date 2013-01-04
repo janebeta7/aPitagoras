@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-     <PreferenceCategory
-            android:title="aPitagoras preferences">
 
+    <PreferenceCategory android:title="aPitagoras preferences" >
         <EditTextPreference
-                android:key="pref_folder"
-                android:title="Folder to save images"
-                android:defaultValue="127.0.0.1"
-                android:summary="Folder to save images"
-                android:dialogTitle="Folder to save images" />
-                
-         <EditTextPreference
-                android:key="pref_name"
-                android:title="Name of image"
-                android:defaultValue="cPitagoras"
-                android:summary="Image Name"
-                android:dialogTitle="Image Name" />               
-             
-      
-    
-
+            android:defaultValue="aPitagoras"
+            android:dialogTitle="Folder to save images"
+            android:key="pref_folder"
+            android:summary="Folder to save images"
+            android:title="Folder to save images" />
+        <EditTextPreference
+            android:defaultValue="cPitagoras"
+            android:dialogTitle="Image Name"
+            android:key="pref_name"
+            android:summary="Image Name"
+            android:title="Name of image" />
+        <ListPreference
+            android:entries="@array/extName"
+            android:entryValues="@array/extValues"
+            android:key="pref_ext"
+            android:summary="Type of the image"
+            android:title="Type of image" />
     </PreferenceCategory>
 </PreferenceScreen>

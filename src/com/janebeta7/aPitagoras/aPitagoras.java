@@ -5,22 +5,24 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import processing.core.PApplet;
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-@SuppressLint("SimpleDateFormat")
-public class aPitagoras extends PApplet  implements ColorPickerDialog.OnColorChangedListener{
+public class aPitagoras extends PApplet implements
+		ColorPickerDialog.OnColorChangedListener {
 	private int mInitialColor = 0xFFFFFFFF;
+	private static final String LOGTAG = "LogsJanebeta7";
 	protected static final int EDIT_PREFS = 1;
 	/*
 	 * --------------------------------------------------------------------------
@@ -38,7 +40,7 @@ public class aPitagoras extends PApplet  implements ColorPickerDialog.OnColorCha
 	/* --- processing variables --- */
 
 	Fade fade;
-	
+
 	int radio = 100;
 	boolean hazFade = false;
 	int Ax;
@@ -52,6 +54,7 @@ public class aPitagoras extends PApplet  implements ColorPickerDialog.OnColorCha
 	int contCirculos = 0;
 	boolean iniciamos = false;
 	boolean dibuja = true;
+
 	public void setup() {
 		smooth();
 		Ax = displayWidth;
@@ -70,16 +73,16 @@ public class aPitagoras extends PApplet  implements ColorPickerDialog.OnColorCha
 	}
 
 	public void draw() {
-		if (dibuja){
+		if (dibuja) {
 			fade.render();
 			for (int z = 0; z < contCirculos; z++) {
 				if (w[z].dibujado == false)
 					w[z].draw(mInitialColor);
 			}
 		}
-		
+
 	}
-	
+
 	// clase que controla el fade in y el fade out
 	class Fade {
 		float fadeTime;
@@ -130,69 +133,73 @@ public class aPitagoras extends PApplet  implements ColorPickerDialog.OnColorCha
 	}
 
 	class Circulo {
-		  //
+		//
 
+		float a = 0.0f;
+		float inc = TWO_PI / 90;
+		int rRadio;
+		int rradio = 400;
+		boolean dibujado = false;
+		int radio, Ax, Ay;
 
-		  float a = 0.0f  ;
-		  float inc = TWO_PI/90;
-		  int rRadio ;
-		  int rradio = 400;
-		  boolean dibujado= false; 
-		  int radio,Ax,Ay;
-		  //constructor de la clase
-		  Circulo (int _radio,int _Ax,int _Ay) {
-		    this.radio = _radio;
-		    this.Ax = _Ax;
-		    this.Ay =_Ay;
-		    this.rRadio = PApplet.parseInt(random(radio,rradio));
-		  }
-		  public void draw(int colorr) {
-		    //variante while dibuja de golpe
-		    while (a <  TWO_PI){
-		    dibujaCirculo();
-		     //  rotate(0.5);
-		    dibujaElipse(colorr);
-		      a = a + inc;
-		    }
-		    a =0;
-		    radio++;
-
-		    if (radio > rradio) {
-		      dibujado = true;
-		    }
-		  }
-
-		  public void dibujaCirculo(){
-
-		    // strokeWeight(1); 
-		    //    ahora recorremos la longitud de r para ir creando puntos que recorran todo el areadel circulo
-		    for (int i = 0; i < radio; i = i+100) {
-
-		      float xx = cos(a)*i+Ax; 
-		      float yy = sin(a)*i+Ay; 
-		      float xx2 = cos(a)*(i+10)+Ax; 
-		      float yy2 = sin(a)*(i+10)+Ay; 
-		      fill(0,30);
-		      noStroke();
-		      ellipse(xx,yy,5,5);
-		     
-		       }
-
-		  }
-		  public void dibujaElipse(int colorr){
-		   noStroke();
-		    int tam = 2;
-		    fill(colorr);
-		    ellipse(cos(a)*radio+Ax, sin(a)*radio+Ay,tam,tam);
-		  }
+		// constructor de la clase
+		Circulo(int _radio, int _Ax, int _Ay) {
+			this.radio = _radio;
+			this.Ax = _Ax;
+			this.Ay = _Ay;
+			this.rRadio = PApplet.parseInt(random(radio, rradio));
 		}
 
-	/*public boolean surfaceTouchEvent(MotionEvent event) {
-		return super.surfaceTouchEvent(event);
-	}*/
+		public void draw(int colorr) {
+			// variante while dibuja de golpe
+			while (a < TWO_PI) {
+				dibujaCirculo();
+				// rotate(0.5);
+				dibujaElipse(colorr);
+				a = a + inc;
+			}
+			a = 0;
+			radio++;
+
+			if (radio > rradio) {
+				dibujado = true;
+			}
+		}
+
+		public void dibujaCirculo() {
+
+			// strokeWeight(1);
+			// ahora recorremos la longitud de r para ir creando puntos que
+			// recorran todo el areadel circulo
+			for (int i = 0; i < radio; i = i + 100) {
+
+				float xx = cos(a) * i + Ax;
+				float yy = sin(a) * i + Ay;
+				float xx2 = cos(a) * (i + 10) + Ax;
+				float yy2 = sin(a) * (i + 10) + Ay;
+				fill(0, 30);
+				noStroke();
+				ellipse(xx, yy, 5, 5);
+
+			}
+
+		}
+
+		public void dibujaElipse(int colorr) {
+			noStroke();
+			int tam = 2;
+			fill(colorr);
+			ellipse(cos(a) * radio + Ax, sin(a) * radio + Ay, tam, tam);
+		}
+	}
+
+	/*
+	 * public boolean surfaceTouchEvent(MotionEvent event) { return
+	 * super.surfaceTouchEvent(event); }
+	 */
 
 	public void mousePressed() {
-			inicia();
+		inicia();
 	}
 
 	// -----------------------------------------------------------------------------------------
@@ -206,16 +213,18 @@ public class aPitagoras extends PApplet  implements ColorPickerDialog.OnColorCha
 		super.onResume();
 		println("RESUMED! (Sketch Entered...)");
 	}
+
 	public void keyPressed() {
-		  if (key == CODED) {
-		 
-		    if (keyCode == MENU) {
-		      // user hit the menu key, take action
-		    	//dibuja = false;
-		      
-		    }
-		  }
+		if (key == CODED) {
+
+			if (keyCode == MENU) {
+				// user hit the menu key, take action
+				// dibuja = false;
+
+			}
 		}
+	}
+
 	/*-----------------------------------------------------------------------------*/
 	/*------------------------ ADD IN ECLIPSE--------------------------------------*/
 	/*-----------------------------------------------------------------------------*/
@@ -224,16 +233,36 @@ public class aPitagoras extends PApplet  implements ColorPickerDialog.OnColorCha
 	private void showColor() {
 	}
 
-	/*------------------------ getScreen-----------------------------------*/
-	private void getScreen() {
-		String state = Environment.getExternalStorageState();
+	/* Rescan the sdcard after copy the file */
+	private void rescanSdcard() throws Exception {
+		Log.i(LOGTAG, ">rescanSdcard()");
+		IntentFilter intentfilter = new IntentFilter(
+				Intent.ACTION_MEDIA_SCANNER_STARTED);
+		intentfilter.addDataScheme("file");
+		MediaScannerReceiver scanSdReceiver = new MediaScannerReceiver();
+		scanSdReceiver.setRestart(false);
+		registerReceiver(scanSdReceiver, intentfilter);
+		sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
+				Uri.parse("file://"
+						+ Environment.getExternalStorageDirectory()
+								.getAbsolutePath())));
+	}
 
+	/*------------------------ getScreen-----------------------------------*/
+	// @SuppressLint("NewApi")
+
+	private void getScreen() throws Exception {
+		String state = Environment.getExternalStorageState();
+		// Log.i(LOGTAG,"Build version"+Build.VERSION.SDK_INT);
 		if (Environment.MEDIA_MOUNTED.equals(state)) {
 			/* como podemos leer la tarjeta grabamos */
 			String folder_path = getResources().getString(R.string.folder_path);
 			String name_path = getResources().getString(R.string.name_path);
+			// String picDir =
+			// Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 			String ext_path = getResources().getString(R.string.ext_path);
-			File extStore = Environment.getExternalStorageDirectory();
+			File extStore = Environment
+					.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 
 			java.util.Date date = Calendar.getInstance().getTime();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
@@ -243,9 +272,12 @@ public class aPitagoras extends PApplet  implements ColorPickerDialog.OnColorCha
 					+ name_path + today + "." + ext_path;
 			save(SD_PATH);
 			// reescaneamos la sdcard para que aparezca en la galeria
-			sendStickyBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"+ Environment.getExternalStorageDirectory())));
-			
-			println("------salvamos imagen------" + SD_PATH);
+			// sendStickyBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
+			// Uri.parse("file://"+
+			// Environment.getExternalStorageDirectory())));
+			rescanSdcard();
+			Log.i(LOGTAG, "SD_PATH:" + SD_PATH);
+			// println("------salvamos imagen------" + SD_PATH);
 			Toast.makeText(
 					getApplicationContext(),
 					getResources().getString(R.string.msg_saveImageOk)
@@ -272,12 +304,14 @@ public class aPitagoras extends PApplet  implements ColorPickerDialog.OnColorCha
 	/*------------------------ CREAMOS ACCIONES DE BOTON MENU-----------------------------------*/
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		/*otra manera de hacerlo sin usar el res ni xml > probar directamente en Processing
-		 * menu.add(0, SRCATOP_MENU_ID, 0, "SrcATop").setShortcut('5', 'z');
-		 * menu.add(0, COLOR_MENU_ID, 0, "Color").setShortcut('3', 'c');
-		 private static final int COLOR_MENU_ID = Menu.FIRST;
+		/*
+		 * otra manera de hacerlo sin usar el res ni xml > probar directamente
+		 * en Processing menu.add(0, SRCATOP_MENU_ID, 0,
+		 * "SrcATop").setShortcut('5', 'z'); menu.add(0, COLOR_MENU_ID, 0,
+		 * "Color").setShortcut('3', 'c'); private static final int
+		 * COLOR_MENU_ID = Menu.FIRST;
 		 */
-		
+
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.app_menu, menu);
 		return true;
@@ -291,33 +325,34 @@ public class aPitagoras extends PApplet  implements ColorPickerDialog.OnColorCha
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-		/*
-		 * case R.id.settings: Intent intent2 = new Intent(this,
-		 * Preferences.class); startActivityForResult(intent2, EDIT_PREFS);
-		 * return true;
-		 */
-		//COLOR_MENU_ID
+
+		/*case R.id.settings:
+			startActivity(new Intent(this, aPreferences.class));
+			return true;*/
 		case R.id.color:
-			//dibujar = false;
-			// new ColorPickerDialog(this, this, mInitialColor).show();
 			dibuja = false;
 			new ColorPickerDialog(this, this, mInitialColor).show();
-			//Toast.makeText(getApplicationContext(),"Not implemented yet! Sorry :(",Toast.LENGTH_LONG).show();
 			return true;
 		case R.id.fade:
-			
+			dibuja = false;
 			fade.setFade();
-			
+			dibuja = true;
 			return true;
 		case R.id.save:
-			
-			getScreen();
+			dibuja = false;
+			try {
+				getScreen();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return true;
 
 		default:
+			dibuja = false;
 			return super.onOptionsItemSelected(item);
 		}
-		
+
 	}
 
 	public int sketchWidth() {
@@ -336,6 +371,11 @@ public class aPitagoras extends PApplet  implements ColorPickerDialog.OnColorCha
 
 			// Load the preferences from an XML resource
 			addPreferencesFromResource(R.xml.preferences);
+			Log.e(LOGTAG, "Mensaje de error");
+			Log.w(LOGTAG, "Mensaje de warning");
+			Log.i(LOGTAG, "Mensaje de informaci—n");
+			Log.d(LOGTAG, "Mensaje de depuraci—n");
+			Log.v(LOGTAG, "Mensaje de verbose");
 		}
 
 	}
@@ -343,9 +383,9 @@ public class aPitagoras extends PApplet  implements ColorPickerDialog.OnColorCha
 	@Override
 	public void colorChanged(int color) {
 		// TODO Auto-generated method stub
-		println("colorChanged:"+color);
+		println("colorChanged:" + color);
 		mInitialColor = color;
 		dibuja = true;
 	}
-    
+
 }
