@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import processing.core.PApplet;
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+@SuppressLint("SimpleDateFormat")
 public class aPitagoras extends PApplet implements
 		ColorPickerDialog.OnColorChangedListener {
 	private int mInitialColor = 0xFFFFFFFF;
@@ -175,8 +177,6 @@ public class aPitagoras extends PApplet implements
 
 				float xx = cos(a) * i + Ax;
 				float yy = sin(a) * i + Ay;
-				float xx2 = cos(a) * (i + 10) + Ax;
-				float yy2 = sin(a) * (i + 10) + Ay;
 				fill(0, 30);
 				noStroke();
 				ellipse(xx, yy, 5, 5);
@@ -228,10 +228,6 @@ public class aPitagoras extends PApplet implements
 	/*-----------------------------------------------------------------------------*/
 	/*------------------------ ADD IN ECLIPSE--------------------------------------*/
 	/*-----------------------------------------------------------------------------*/
-
-	/* pick a color */
-	private void showColor() {
-	}
 
 	/* Rescan the sdcard after copy the file */
 	private void rescanSdcard() throws Exception {
@@ -369,8 +365,7 @@ public class aPitagoras extends PApplet implements
 		protected void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 
-			// Load the preferences from an XML resource
-			addPreferencesFromResource(R.xml.preferences);
+		
 			Log.e(LOGTAG, "Mensaje de error");
 			Log.w(LOGTAG, "Mensaje de warning");
 			Log.i(LOGTAG, "Mensaje de informaci—n");
