@@ -98,7 +98,7 @@ public class aPitagoras extends PApplet implements
 		boolean fadeIn = false, fadeOut = false, on = false;
 
 		Fade() {
-			println("init Fade");
+			//println("init Fade");
 		}
 
 		public void render() {
@@ -218,13 +218,13 @@ public class aPitagoras extends PApplet implements
 	
 	public void onResume() {
 		super.onResume();
-		Log.i(LOGTAG, "onResume");
+		//Log.i(LOGTAG, "onResume");
 	}
 
 	public void keyPressed() {
 		//Log.i(LOGTAG, "key PRESSED"+key);
 		if (key == CODED) {
-			Log.i(LOGTAG, "key PRESSED"+keyCode);
+			//Log.i(LOGTAG, "key PRESSED"+keyCode);
 			if (keyCode == MENU) {
 				
 				//dibuja = false;
@@ -239,7 +239,7 @@ public class aPitagoras extends PApplet implements
 
 	/* Rescan the sdcard after copy the file */
 	private void rescanSdcard() throws Exception {
-		Log.i(LOGTAG, ">rescanSdcard()");
+		//Log.i(LOGTAG, ">rescanSdcard()");
 		IntentFilter intentfilter = new IntentFilter(
 				Intent.ACTION_MEDIA_SCANNER_STARTED);
 		intentfilter.addDataScheme("file");
@@ -280,8 +280,8 @@ public class aPitagoras extends PApplet implements
 			// Uri.parse("file://"+
 			// Environment.getExternalStorageDirectory())));
 			rescanSdcard();
-			Log.i(LOGTAG, "SD_PATH:" + SD_PATH);
-			// println("------salvamos imagen------" + SD_PATH);
+			//Log.i(LOGTAG, "SD_PATH:" + SD_PATH);
+			// //println("------salvamos imagen------" + SD_PATH);
 			Toast.makeText(
 					getApplicationContext(),
 					getResources().getString(R.string.msg_saveImageOk)
@@ -315,7 +315,7 @@ public class aPitagoras extends PApplet implements
 		 * "Color").setShortcut('3', 'c'); private static final int
 		 * COLOR_MENU_ID = Menu.FIRST;
 		 */
-		println("Creamos menu");
+		//println("Creamos menu");
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.app_menu, menu);
 		
@@ -386,11 +386,11 @@ public class aPitagoras extends PApplet implements
 		@Override
 		protected void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
-			Log.e(LOGTAG, "Mensaje de error");
-			Log.w(LOGTAG, "Mensaje de warning");
-			Log.i(LOGTAG, "Mensaje de informaci—n");
-			Log.d(LOGTAG, "Mensaje de depuraci—n");
-			Log.v(LOGTAG, "Mensaje de verbose");
+			//Log.e(LOGTAG, "Mensaje de error");
+			//Log.w(LOGTAG, "Mensaje de warning");
+			//Log.i(LOGTAG, "Mensaje de informaci—n");
+			//Log.d(LOGTAG, "Mensaje de depuraci—n");
+			//Log.v(LOGTAG, "Mensaje de verbose");
 			
 		}
 
@@ -399,7 +399,7 @@ public class aPitagoras extends PApplet implements
 	@Override
 	public void colorChanged(int color) {
 		// TODO Auto-generated method stub
-		println("colorChanged:" + color);
+		//println("colorChanged:" + color);
 		mInitialColor = color;
 		isOpenColor = false;
 	}
