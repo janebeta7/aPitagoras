@@ -14,28 +14,30 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
+import android.view.MotionEvent;
 import android.widget.Toast;
 
+import com.rj.processing.mt.Cursor;
+import com.rj.processing.mt.MTManager;
+import com.rj.processing.mt.TouchListener;
+
 @SuppressLint("SimpleDateFormat")
-public class aPitagoras extends PApplet implements
+public class aPitagoras extends PApplet implements TouchListener,
 		ColorPickerDialog.OnColorChangedListener {
 	private int mInitialColor = 0xFFFFFFFF;
 	private static final String LOGTAG = "LogsJanebeta7";
 	protected static final int EDIT_PREFS = 1;
+	public MTManager mtManager;
+	private final static boolean DEBUG = true;
 	/*
 	 * --------------------------------------------------------------------------
 	 * ------ Alba G.Corral (www.albagcorral.com)
-	 * 
+	 *
 	 * --------------------------------------------------------------------------
 	 * ------
 	 */
@@ -54,7 +56,7 @@ public class aPitagoras extends PApplet implements
 	int Ax;
 	int Ay;
 	int espacio = 1;
-	int NUM = 4; // NUMERO DE CIRCULOS
+	int NUM = 10; // NUMERO DE CIRCULOS
 	Circulo[] w = new Circulo[NUM]; // array de cienpies
 	int colorFade, colorFadeInv;
 	Circulo circulo;
@@ -63,20 +65,23 @@ public class aPitagoras extends PApplet implements
 	boolean iniciamos = false;
 	boolean dibuja = true;
 	boolean isOpenColor = false;
-	
+
 	public void setup() {
 		smooth();
 		Ax = displayWidth;
 		Ay = displayHeight;
 		fade = new Fade();
 		background(0);
+		debug();
+		mtManager = new MTManager();
+		mtManager.addTouchListener(this);
 	}
 
-	public void inicia() {
+	public void inicia(float xx, float yy) {
 		if (contCirculos == (NUM))
 			contCirculos = 0;
 		w[contCirculos] = new Circulo(PApplet.parseInt(random(radio)),
-				PApplet.parseInt(mouseX), PApplet.parseInt(mouseY)); // nuevo
+				PApplet.parseInt(xx), PApplet.parseInt(yy)); // nuevo
 																		// circulo
 		contCirculos++; // note the use of modulo
 	}
@@ -98,7 +103,7 @@ public class aPitagoras extends PApplet implements
 		boolean fadeIn = false, fadeOut = false, on = false;
 
 		Fade() {
-			//println("init Fade");
+			// println("init Fade");
 		}
 
 		public void render() {
@@ -162,7 +167,7 @@ public class aPitagoras extends PApplet implements
 		public void draw(int colorr) {
 			// variante while dibuja de golpe
 			while (a < TWO_PI) {
-				dibujaCirculo();
+				//dibujaCirculo();
 				// rotate(0.5);
 				dibujaElipse(colorr);
 				a = a + inc;
@@ -200,13 +205,8 @@ public class aPitagoras extends PApplet implements
 		}
 	}
 
-	/*
-	 * public boolean surfaceTouchEvent(MotionEvent event) { return
-	 * super.surfaceTouchEvent(event); }
-	 */
-
 	public void mousePressed() {
-		inicia();
+		//inicia();
 	}
 
 	// -----------------------------------------------------------------------------------------
@@ -215,19 +215,19 @@ public class aPitagoras extends PApplet implements
 	// Processing is entered
 	// at the 'onResume()' state, and exits at the 'onPause()' state, so just
 	// override them as needed:
-	
+
 	public void onResume() {
 		super.onResume();
-		//Log.i(LOGTAG, "onResume");
+		// Log.i(LOGTAG, "onResume");
 	}
 
 	public void keyPressed() {
-		//Log.i(LOGTAG, "key PRESSED"+key);
+		// Log.i(LOGTAG, "key PRESSED"+key);
 		if (key == CODED) {
-			//Log.i(LOGTAG, "key PRESSED"+keyCode);
+			// Log.i(LOGTAG, "key PRESSED"+keyCode);
 			if (keyCode == MENU) {
-				
-				//dibuja = false;
+
+				// dibuja = false;
 
 			}
 		}
@@ -239,7 +239,7 @@ public class aPitagoras extends PApplet implements
 
 	/* Rescan the sdcard after copy the file */
 	private void rescanSdcard() throws Exception {
-		//Log.i(LOGTAG, ">rescanSdcard()");
+		// Log.i(LOGTAG, ">rescanSdcard()");
 		IntentFilter intentfilter = new IntentFilter(
 				Intent.ACTION_MEDIA_SCANNER_STARTED);
 		intentfilter.addDataScheme("file");
@@ -280,7 +280,7 @@ public class aPitagoras extends PApplet implements
 			// Uri.parse("file://"+
 			// Environment.getExternalStorageDirectory())));
 			rescanSdcard();
-			//Log.i(LOGTAG, "SD_PATH:" + SD_PATH);
+			// Log.i(LOGTAG, "SD_PATH:" + SD_PATH);
 			// //println("------salvamos imagen------" + SD_PATH);
 			Toast.makeText(
 					getApplicationContext(),
@@ -301,7 +301,7 @@ public class aPitagoras extends PApplet implements
 					getResources().getString(R.string.msg_saveImageFail),
 					Toast.LENGTH_LONG).show();
 		}
-		//dibuja = true;
+		// dibuja = true;
 
 	}
 
@@ -315,10 +315,10 @@ public class aPitagoras extends PApplet implements
 		 * "Color").setShortcut('3', 'c'); private static final int
 		 * COLOR_MENU_ID = Menu.FIRST;
 		 */
-		//println("Creamos menu");
+		// println("Creamos menu");
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.app_menu, menu);
-		
+
 		return true;
 	}
 
@@ -329,50 +329,49 @@ public class aPitagoras extends PApplet implements
 	public void onOptionsMenuClosed(Menu menu) {
 		dibuja = true;
 	}
+
 	@Override
 	public boolean onMenuOpened(int featureId, Menu menu) {
 		dibuja = false;
-		
-	    return super.onMenuOpened(featureId, menu);
+
+		return super.onMenuOpened(featureId, menu);
 	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
 
-		/*case R.id.settings:
-			startActivity(new Intent(this, aPreferences.class));
-			return true;*/
+		/*
+		 * case R.id.settings: startActivity(new Intent(this,
+		 * aPreferences.class)); return true;
+		 */
 		case R.id.color:
 			isOpenColor = true;
 			new ColorPickerDialog(this, this, mInitialColor).show();
 			return true;
 		case R.id.fade:
-			
+
 			fade.setFade();
-			//dibuja = true;
+			// dibuja = true;
 			return true;
 		case R.id.save:
-			
+
 			try {
 				getScreen();
 			} catch (Exception e) {
-				
+
 				e.printStackTrace();
 			}
 			return true;
 
 		default:
-		
+
 			return super.onOptionsItemSelected(item);
 		}
 
 	}
 
-
-
-
-	
 	public int sketchWidth() {
 		return displayWidth;
 	}
@@ -386,22 +385,82 @@ public class aPitagoras extends PApplet implements
 		@Override
 		protected void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
-			//Log.e(LOGTAG, "Mensaje de error");
-			//Log.w(LOGTAG, "Mensaje de warning");
-			//Log.i(LOGTAG, "Mensaje de informaci—n");
-			//Log.d(LOGTAG, "Mensaje de depuraci—n");
-			//Log.v(LOGTAG, "Mensaje de verbose");
-			
+			Log.e(LOGTAG, "Mensaje de error");
+			Log.w(LOGTAG, "Mensaje de warning");
+			Log.i(LOGTAG, "Mensaje de informaci—n");
+			Log.d(LOGTAG, "Mensaje de depuraci—n");
+			Log.v(LOGTAG, "Mensaje de verbose");
+
 		}
+
+	}
+	public int[] getDataCoordsFromXY(PApplet p, float mousex, float mousey) {
+
+
+		int[] coords = new int[2];
+		coords[0] = (int) mousex;
+		coords[1] = (int) mousey;
+		return coords;
+	}
+	@Override
+	public void colorChanged(int color) {
+		// TODO Auto-generated method stub
+		// println("colorChanged:" + color);
+		mInitialColor = color;
+		isOpenColor = false;
+	}
+	public void debug() {
+		  // Place this inside your setup() method
+		  final DisplayMetrics dm = new DisplayMetrics();
+		  getWindowManager().getDefaultDisplay().getMetrics(dm);
+		  final float density = dm.density;
+		  final int densityDpi = dm.densityDpi;
+		  println("density is " + density);
+		  println("densityDpi is " + densityDpi);
+		  println("HEY! the screen size is "+width+"x"+height);
+	}
+	// mt version
+	public boolean surfaceTouchEvent(final MotionEvent me) {
+		if (mtManager != null)
+			mtManager.surfaceTouchEvent(me);
+		return super.surfaceTouchEvent(me);
+	}
+	Cursor movingCursor;
+	@Override
+	public void touchDown(Cursor c) {
+		if(DEBUG){
+		noFill();
+		stroke(255);
+		ellipse(c.currentPoint.x,c.currentPoint.y,100,100);
+		noStroke();
+		}
+		if (mtManager.cursors.size() <= 1) {
+			movingCursor = c;
+		}
+		inicia(c.currentPoint.x,c.currentPoint.y);
+	}
+
+	@Override
+	public void touchUp(Cursor c) {
+		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void colorChanged(int color) {
+	public void touchMoved(Cursor c) {
 		// TODO Auto-generated method stub
-		//println("colorChanged:" + color);
-		mInitialColor = color;
-		isOpenColor = false;
+
+		int[] coords1 = getDataCoordsFromXY( this,c.firstPoint.x, c.firstPoint.y);
+		int[] coords2 = getDataCoordsFromXY(this, c.currentPoint.x, c.currentPoint.y);
+		if (DEBUG) Log.d("touchMoved", "MOV: c1:("+coords1[0]+","+coords1[1]+")  c2:("+coords2[0]+","+coords2[1]+")   movcur:"+movingCursor);
+
+
+	}
+
+	@Override
+	public void touchAllUp(Cursor c) {
+		// TODO Auto-generated method stub
+
 	}
 
 }
